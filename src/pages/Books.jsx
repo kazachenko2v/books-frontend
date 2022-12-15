@@ -1,6 +1,5 @@
 import React from "react";
 import { Link } from "react-router-dom";
-// import {axiosInstance} from "../config";
 import axios from "axios";
 
 const Books = () => {
@@ -9,7 +8,7 @@ const Books = () => {
   React.useEffect(() => {
     const fetch = async () => {
       try {
-        const res = await axios.get("http://localhost:8800/books");
+        const res = await axios.get("https://books-7jdf.onrender.com/books");
         setBooks(res.data);
       } catch (err) {
         console.log(err);
@@ -20,7 +19,9 @@ const Books = () => {
 
   const deleteHandler = async (id) => {
     try {
-      const res = await axios.delete("http://localhost:8800/books/" + id);
+      const res = await axios.delete(
+        "https://books-7jdf.onrender.com/books/" + id
+      );
       window.location.reload();
     } catch (err) {
       console.log(err);

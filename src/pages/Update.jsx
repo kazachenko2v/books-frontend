@@ -1,6 +1,5 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-// import { axiosInstance } from "../config";
 import axios from "axios";
 
 const Update = () => {
@@ -22,7 +21,7 @@ const Update = () => {
   const updateBook = async (e) => {
     e.preventDefault();
     try {
-      await axios.put("http://localhost:8800/books/" + bookId, book);
+      await axios.put("https://books-7jdf.onrender.com/books/" + bookId, book);
       navigate("/");
     } catch (error) {
       console.log(error);
