@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { URL } from "../constants";
 
 const Add = () => {
   const [book, setBook] = React.useState({
@@ -18,7 +19,7 @@ const Add = () => {
   const addBook = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("https://books-7jdf.onrender.com/books", book);
+      await axios.post(URL + "/books", book);
       navigate("/");
     } catch (error) {
       console.log(error);

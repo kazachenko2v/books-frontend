@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
+import { URL } from "../constants";
 
 const Update = () => {
   const [book, setBook] = React.useState({
@@ -21,7 +22,7 @@ const Update = () => {
   const updateBook = async (e) => {
     e.preventDefault();
     try {
-      await axios.put("https://books-7jdf.onrender.com/books/" + bookId, book);
+      await axios.put(URL + "/books/" + bookId, book);
       navigate("/");
     } catch (error) {
       console.log(error);
