@@ -43,7 +43,7 @@ export function valueSumm(arr, value) {
 export function getSelectedNames(arr, selected) {
   return selected
     .map((id) => {
-      return arr.map((row) => (row.id == id ? row.name : null));
+      return arr.map((row) => (row.id === id ? row.name : null));
     })
     .flat()
     .filter((el) => el);

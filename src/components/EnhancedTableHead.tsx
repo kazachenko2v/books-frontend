@@ -3,21 +3,22 @@ import React from "react";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import TableCell from "@mui/material/TableCell";
+import TableCell, { SortDirection } from "@mui/material/TableCell";
 import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
 import { visuallyHidden } from "@mui/utils";
 
-function EnhancedTableHead(props) {
-  const {
-    onSelectAllClick,
-    order,
-    orderBy,
-    numSelected,
-    rowCount,
-    onRequestSort,
-  } = props;
-  const createSortHandler = (property) => (event) => {
+import { EnhancedTableHeadProps } from "./types";
+
+const EnhancedTableHead: React.FC<EnhancedTableHeadProps> = ({
+  order,
+  orderBy,
+  numSelected,
+  rowCount,
+  onSelectAllClick,
+  onRequestSort,
+}) => {
+  const createSortHandler = (property: string) => (event: React.MouseEvent) => {
     onRequestSort(event, property);
   };
 
@@ -71,11 +72,15 @@ function EnhancedTableHead(props) {
             key={headCell.id}
             align={"center"}
             padding={"normal"}
-            sortDirection={orderBy === headCell.id ? order : false}
+            sortDirection={
+              (orderBy === headCell.id ? order : false) as
+                | SortDirection
+                | undefined
+            }
           >
             <TableSortLabel
               active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
+              direction={(orderBy === headCell.id ? order : "asc") as any}
               onClick={createSortHandler(headCell.id)}
             >
               {headCell.label}
@@ -90,5 +95,5 @@ function EnhancedTableHead(props) {
       </TableRow>
     </TableHead>
   );
-}
+};
 export default EnhancedTableHead;

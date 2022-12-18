@@ -9,7 +9,15 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
-const Popup = ({ isOpen, close, selectedId, selectedNames, setSelected }) => {
+import { PopupProps } from "./types";
+
+const Popup: React.FC<PopupProps> = ({
+  isOpen,
+  close,
+  selectedId,
+  selectedNames,
+  setSelected,
+}) => {
   const handleClose = () => {
     close(false);
   };

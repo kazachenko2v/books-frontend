@@ -4,9 +4,9 @@ import { alpha } from "@mui/material/styles";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 
-function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
-
+const EnhancedTableToolbar: React.FC<{ numSelected: number }> = ({
+  numSelected,
+}) => {
   return (
     <Toolbar
       sx={{
@@ -42,6 +42,6 @@ function EnhancedTableToolbar(props) {
       )}
     </Toolbar>
   );
-}
+};
 
 export default EnhancedTableToolbar;
