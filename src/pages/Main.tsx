@@ -13,6 +13,7 @@ import Checkbox from "@mui/material/Checkbox";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import TableFooter from "@mui/material/TableFooter";
+import CircularProgress from "@mui/material/CircularProgress";
 
 import EnhancedTableToolbar from "../components/EnhancedTableToolbar";
 import EnhancedTableHead from "../components/EnhancedTableHead";
@@ -33,6 +34,7 @@ export default function EnhancedTable() {
   const [rows, setRows] = React.useState<doc[] | []>([]);
   const [searchValue, setSearchValue] = React.useState("");
   const [isOpen, setIsOpen] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(true);
 
   const selectedNames = getSelectedNames(rows, selected);
 
@@ -76,6 +78,8 @@ export default function EnhancedTable() {
         setRows(rowsWithTotal.flat());
       } catch (err) {
         console.log(err);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetch();
@@ -143,101 +147,115 @@ export default function EnhancedTable() {
       <Box sx={{ width: "100%" }}>
         <Paper sx={{ width: "100%", mb: 2 }}>
           <EnhancedTableToolbar numSelected={selected.length} />
-          <TableContainer>
-            <Table
-              sx={{ minWidth: 750 }}
-              aria-labelledby="tableTitle"
-              size={"medium"}
+          {isLoading ? (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100vh",
+              }}
             >
-              <EnhancedTableHead
-                numSelected={selected.length}
-                order={order}
-                orderBy={orderBy}
-                rowCount={rows.length}
-                onSelectAllClick={handleSelectAllClick}
-                onRequestSort={handleRequestSort}
-              />
-              <TableBody>
-                {searchedRows &&
-                  searchedRows
-                    .sort(getComparator(order, orderBy))
-                    .map((row, index) => {
-                      if (row) {
-                        const isItemSelected = isSelected(row.id);
-                        const labelId = `enhanced-table-checkbox-${index}`;
+              <CircularProgress />
+            </Box>
+          ) : (
+            <TableContainer>
+              <Table
+                sx={{ minWidth: 750 }}
+                aria-labelledby="tableTitle"
+                size={"medium"}
+              >
+                <EnhancedTableHead
+                  numSelected={selected.length}
+                  order={order}
+                  orderBy={orderBy}
+                  rowCount={rows.length}
+                  onSelectAllClick={handleSelectAllClick}
+                  onRequestSort={handleRequestSort}
+                />
 
-                        return (
-                          <TableRow
-                            hover
-                            onClick={(event) => handleClick(event, row.id)}
-                            role="checkbox"
-                            aria-checked={isItemSelected}
-                            tabIndex={-1}
-                            key={row.id}
-                            selected={isItemSelected}
-                          >
-                            <TableCell padding="checkbox">
-                              <Checkbox
-                                color="primary"
-                                checked={isItemSelected}
-                                inputProps={{
-                                  "aria-labelledby": labelId,
-                                }}
-                              />
-                            </TableCell>
-                            <TableCell
-                              component="th"
-                              id={labelId}
-                              scope="row"
-                              padding="none"
-                              align="center"
+                <TableBody>
+                  {searchedRows &&
+                    searchedRows
+                      .sort(getComparator(order, orderBy))
+                      .map((row, index) => {
+                        if (row) {
+                          const isItemSelected = isSelected(row.id);
+                          const labelId = `enhanced-table-checkbox-${index}`;
+
+                          return (
+                            <TableRow
+                              hover
+                              onClick={(event) => handleClick(event, row.id)}
+                              role="checkbox"
+                              aria-checked={isItemSelected}
+                              tabIndex={-1}
+                              key={row.id}
+                              selected={isItemSelected}
                             >
-                              {row.name}
-                            </TableCell>
-                            <TableCell align="center">{row.status}</TableCell>
-                            <TableCell align="center">
-                              {formatDate(row.delivery_date)}
-                            </TableCell>
-                            <TableCell align="center">{row.sum}</TableCell>
-                            <TableCell align="center">{row.qty}</TableCell>
-                            <TableCell align="center">{row.volume}</TableCell>
-                            <TableCell align="center">{row.total}</TableCell>
-                          </TableRow>
-                        );
-                      }
-                    })}
-              </TableBody>
-              <TableFooter>
-                <TableRow>
-                  <TableCell colSpan={1} />
+                              <TableCell padding="checkbox">
+                                <Checkbox
+                                  color="primary"
+                                  checked={isItemSelected}
+                                  inputProps={{
+                                    "aria-labelledby": labelId,
+                                  }}
+                                />
+                              </TableCell>
+                              <TableCell
+                                component="th"
+                                id={labelId}
+                                scope="row"
+                                padding="none"
+                                align="center"
+                              >
+                                {row.name}
+                              </TableCell>
+                              <TableCell align="center">{row.status}</TableCell>
+                              <TableCell align="center">
+                                {formatDate(row.delivery_date)}
+                              </TableCell>
+                              <TableCell align="center">{row.sum}</TableCell>
+                              <TableCell align="center">{row.qty}</TableCell>
+                              <TableCell align="center">{row.volume}</TableCell>
+                              <TableCell align="center">{row.total}</TableCell>
+                            </TableRow>
+                          );
+                        }
+                      })}
+                </TableBody>
+                <TableFooter>
+                  <TableRow>
+                    <TableCell colSpan={1} />
 
-                  <TableCell align="center">
-                    <Button variant="outlined" onClick={openHandler}>
-                      Аннулировать
-                    </Button>
-                  </TableCell>
-                  <TableCell colSpan={1} />
-                  <TableCell align="center">
-                    <TextField
-                      id="outlined-basic"
-                      label="Search"
-                      variant="outlined"
-                      color="primary"
-                      value={searchValue}
-                      onChange={(e) => setSearchValue(e.target.value)}
-                    />
-                  </TableCell>
-                  <TableCell colSpan={1} />
-                  <TableCell align="center">
-                    Общее кол-во: {valueSumm(searchedRows, "qty")}
-                  </TableCell>
-                  <TableCell align="center">
-                    Общее обьем: {valueSumm(searchedRows, "volume")}
-                  </TableCell>
-                </TableRow>
-              </TableFooter>
-            </Table>
-          </TableContainer>
+                    <TableCell align="center">
+                      <Button variant="outlined" onClick={openHandler}>
+                        Аннулировать
+                      </Button>
+                    </TableCell>
+                    <TableCell colSpan={1} />
+                    <TableCell align="center">
+                      <TextField
+                        id="outlined-basic"
+                        label="Search"
+                        variant="outlined"
+                        color="primary"
+                        value={searchValue}
+                        onChange={(e) => setSearchValue(e.target.value)}
+                      />
+                    </TableCell>
+                    <TableCell colSpan={1} />
+                    <TableCell align="center">
+                      Общее кол-во: {valueSumm(searchedRows, "qty")}
+                    </TableCell>
+                    <TableCell align="center">
+                      Общее обьем: {valueSumm(searchedRows, "volume")}
+                    </TableCell>
+                  </TableRow>
+                </TableFooter>
+              </Table>
+            </TableContainer>
+          )}
         </Paper>
       </Box>
     </>
