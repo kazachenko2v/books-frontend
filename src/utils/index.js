@@ -9,6 +9,9 @@ function descendingComparator(a, b, orderBy) {
     first = new Date(first).getTime();
     second = new Date(second).getTime();
   }
+  if (orderBy === "name") {
+    return first.localeCompare(second);
+  }
   if (second < first) {
     return -1;
   }
